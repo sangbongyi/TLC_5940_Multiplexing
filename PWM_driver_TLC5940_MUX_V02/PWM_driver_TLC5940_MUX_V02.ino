@@ -27,22 +27,22 @@
 
 const uint16_t exp_table [] PROGMEM=
 { 
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,  //16  
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,  //32  
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,   42,  //48 
-   43,   44,   45,   46,   47,   48,   49,   50,   51,   53,   54,   55,   56,   57,   59,   60,  //64  
-   61,   63,   64,   65,   67,   68,   70,   72,   73,   75,   76,   78,   80,   82,   83,   85,  //82  
-   87,   89,   91,   93,   95,   97,   99,  102,  104,  106,  109,  111,  114,  116,  119,  121,  //96
-  124,  127,  130,  132,  135,  138,  141,  145,  148,  151,  154,  158,  161,  165,  169,  172,  //112
-  176,  180,  184,  188,  192,  197,  201,  206,  210,  215,  220,  225,  230,  235,  240,  245,  //128
-  251,  256,  262,  268,  274,  280,  286,  292,  299,  305,  312,  319,  326,  334,  341,  349,  //144
-  356,  364,  372,  381,  389,  398,  407,  416,  425,  434,  444,  454,  464,  474,  485,  496,  //160
-  507,  518,  529,  541,  553,  566,  578,  591,  604,  618,  631,  645,  660,  674,  689,  705,  //176
-  720,  736,  753,  770,  787,  804,  822,  840,  859,  878,  898,  918,  938,  959,  980, 1002,  //192
- 1024, 1047, 1070, 1094, 1119, 1143, 1169, 1195, 1221, 1249, 1276, 1305, 1334, 1364, 1394, 1425,  //208
- 1457, 1489, 1522, 1556, 1591, 1626, 1662, 1699, 1737, 1775, 1815, 1855, 1897, 1939, 1982, 2026,  //224
- 2071, 2117, 2164, 2212, 2262, 2312, 2363, 2416, 2470, 2524, 2581, 2638, 2697, 2757, 2818, 2881,  //240
- 2945, 3010, 3077, 3146, 3216, 3287, 3360, 3435, 3511, 3590, 3669, 3751, 3834, 3920, 4007, 4095   //256
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,  //0-15 
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,  //16-31  
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,   42,  //32-47 
+   43,   44,   45,   46,   47,   48,   49,   50,   51,   53,   54,   55,   56,   57,   59,   60,  //48-63  
+   61,   63,   64,   65,   67,   68,   70,   72,   73,   75,   76,   78,   80,   82,   83,   85,  //64-79  
+   87,   89,   91,   93,   95,   97,   99,  102,  104,  106,  109,  111,  114,  116,  119,  121,  //80-95
+  124,  127,  130,  132,  135,  138,  141,  145,  148,  151,  154,  158,  161,  165,  169,  172,  //96-111
+  176,  180,  184,  188,  192,  197,  201,  206,  210,  215,  220,  225,  230,  235,  240,  245,  //112-127
+  251,  256,  262,  268,  274,  280,  286,  292,  299,  305,  312,  319,  326,  334,  341,  349,  //128-143
+  356,  364,  372,  381,  389,  398,  407,  416,  425,  434,  444,  454,  464,  474,  485,  496,  //144-159
+  507,  518,  529,  541,  553,  566,  578,  591,  604,  618,  631,  645,  660,  674,  689,  705,  //160-175
+  720,  736,  753,  770,  787,  804,  822,  840,  859,  878,  898,  918,  938,  959,  980, 1002,  //176-191
+ 1024, 1047, 1070, 1094, 1119, 1143, 1169, 1195, 1221, 1249, 1276, 1305, 1334, 1364, 1394, 1425,  //192-207
+ 1457, 1489, 1522, 1556, 1591, 1626, 1662, 1699, 1737, 1775, 1815, 1855, 1897, 1939, 1982, 2026,  //208-223
+ 2071, 2117, 2164, 2212, 2262, 2312, 2363, 2416, 2470, 2524, 2581, 2638, 2697, 2757, 2818, 2881,  //224-239
+ 2945, 3010, 3077, 3146, 3216, 3287, 3360, 3435, 3511, 3590, 3669, 3751, 3834, 3920, 4007, 4095   //240-255
 };
 
 volatile uint8_t needXlat_pulse = 0;
@@ -63,29 +63,30 @@ SPISettings settingsA(8000000, MSBFIRST, SPI_MODE0);
 
 void setup() {
 
-  //*********************UART initialisation*********************//
-  UCSR0A |= (1 << U2X0);                            // Double up UART
-  UCSR0B |= (1 << RXEN0)  | (1 << TXEN0) | (1 << RXCIE0); // UART RX, TX und RX Interrupt enable
-  UCSR0C |= (1 << UCSZ01) | (1 << UCSZ00)             ; // Asynchrous 8N1
+  //*****************************UART initialisation*****************************//
+  UCSR0A |= (1 << U2X0);                                  // Double up UART      //
+  UCSR0B |= (1 << RXEN0)  | (1 << TXEN0) | (1 << RXCIE0); // UART RX, TX enable  //
+                                                          // RX Interrupt enable //
+  UCSR0C |= (1 << UCSZ01) | (1 << UCSZ00);                // Asynchrous 8N1      //
   UBRR0H = 0;
-  UBRR0L = 0;                                       //Baud Rate 2 MBit
-  //*********************UART initialisation*********************//
+  UBRR0L = 0;                                             //Baud Rate 2 MBit     //
+  //*****************************UART initialisation*****************************//
 
   //*********************GSCLK PIN SETUP*********************//
-  DDRD |= (1 << 3); // DIGITAL PIN 3 (PD3) OUTPUT
-  DDRD &= ~(1 << 5); //DIGITAL PIN 5 T1 PIN (PD5) INPUT
+  DDRD |= (1 << 3);   // DIGITAL PIN 3 (PD3) OUTPUT          //
+  DDRD &= ~(1 << 5);  // DIGITAL PIN 5 T1 PIN (PD5) INPUT    //
   //*********************GSCLK PIN SETUP*********************//
 
-  //*********************SCLK, SIN, BLANK, XLAT PIN SETUP*********************//
-  DDRB = 0b00101110; //SCLK PIN, SIN(MOSI) PIN, BLANK(OC1B) PIN, XLAT(OC1A) PIN AS OUTPUT
-  //PB5 ,PB3 ,PB2, PB1 AS OUTPUT
-  PORTB = 0b00000100; //BLANK HIGH, SCLK, SIN, XLAT LOW
-  //PB2 HIGH
-  //*********************SCLK, SIN, BLANK, XLAT PIN SETUP*********************//
+  //****************************SCLK, SIN, BLANK, XLAT PIN SETUP**************************//
+  DDRB = 0b00101110;  // SCLK PIN, SIN(MOSI) PIN, BLANK(OC1B) PIN, XLAT(OC1A) PIN OUTPUT  //
+                      // PB5 ,PB3 ,PB2, PB1 AS OUTPUT                                     //
+  PORTB = 0b00000100; // BLANK HIGH, SCLK, SIN, XLAT LOW                                  //
+                      // PB2 HIGH                                                         //
+  //****************************SCLK, SIN, BLANK, XLAT PIN SETUP**************************//
 
   //*********************Layer select pin*********************//
-  DDRC = 0xFF; //PC7-0 as output
-  PORTC = 0x10; //layer select off (0b00010000)PC4 HIGH
+  DDRC = 0xFF;  // PC7-0 output                               //
+  PORTC = 0x10; //l ayer select off (0b00010000)PC4 HIGH      //
   //*********************Layer select pin*********************//
 
   //*********************SPI PIN SETUP*********************//
@@ -93,36 +94,37 @@ void setup() {
   SPI.begin();
   //*********************SPI PIN SETUP*********************//
 
-  //*********************GSCLK Timer SETUP (TIMER2)*********************//
+  //******************************GSCLK Timer SETUP (TIMER2)******************************//
   TCCR2A = (1 << WGM21) | (0 << WGM20);
-  TCCR2B = (0 << WGM22 ); //CTC
-  TCCR2A |= (0 << COM2B1) | (1 << COM2B0); //toggle on compare match OC2B pin
-  TCCR2B |= (0 << CS22) | (0 << CS21) | (1 << CS20); //No prescaler
-  OCR2A = 0; //compare value
-  //*********************GSCLK Timer SETUP (TIMER2)*********************//
+  TCCR2B = (0 << WGM22 );                             // CTC                              //
+  TCCR2A |= (0 << COM2B1) | (1 << COM2B0);            // toggle on compare match OC2B pin //
+  TCCR2B |= (0 << CS22) | (0 << CS21) | (1 << CS20);  // No prescaler                     //
+  OCR2A = 0;                                          //compare value                     //
+  //******************************GSCLK Timer SETUP (TIMER2)******************************//
 
-  //*********************BLANK,XLAT Timer SETUP (TIMER1)*********************//
-  TCCR1A  = (1 << WGM11) | (0 << WGM10); // Fast PWM with ICR1 as top
+  //*******************************BLANK,XLAT Timer SETUP (TIMER1)*******************************//
+  TCCR1A  = (1 << WGM11) | (0 << WGM10);              // Fast PWM when ICR1 reaches the top      //
   TCCR1B  = (1 << WGM13) | (1 << WGM12);
-  TCCR1B |= (1 << CS12)  | (1 << CS11) | (1 << CS10); // Feed external clock from T1 pin (0c2b)
-  TIMSK1 |= (1 << TOIE1);
-  ICR1 = 4150; //For every 512us, ISR starts
-  //*********************BLANK,XLAT Timer SETUP (TIMER1)*********************//
+  TCCR1B |= (1 << CS12)  | (1 << CS11) | (1 << CS10); // Feed external clock from T1 pin (0c2b)  //
+  TIMSK1 |= (1 << TOIE1);                             // TIMER interrupt enable                  //
+  ICR1 = 4150;                                        // For every 512us, ISR starts             //
+  //*******************************BLANK,XLAT Timer SETUP (TIMER1)*******************************//
 
   //*********************GS value initialisation*********************//
   brightness_Init();
   //*********************GS value initialisation*********************//
 
-  //*********************XLAT PULSE*********************//
-  PORTB |= (1 << 1); //XLAT pulse, HIGH to LOW
-  PORTB &= (0 << 1); //get ready for a 2nd GS DATA input cycle
-  //*********************XLAT PULSE*********************//
+  //**************************XLAT PULSE**************************//
+  PORTB |= (1 << 1); // XLAT pulse, HIGH to LOW                   //
+  PORTB &= (0 << 1); // get ready for the 2nd GS DATA input cycle //
+  //**************************XLAT PULSE**************************//
 
   //*********************First GSdata input cycle start, Initial value*********************//
   for (int i = 0; i < GSbyteBlock; i++) {
     transferData(brightnessValue[i]);
   }
   //*********************First GSdata input cycle start, Initial value*********************//
+  
   //*********************Enable global interrupt*********************//
   sei();
   //*********************Enable global interrupt*********************//
@@ -130,40 +132,44 @@ void setup() {
 
 ISR (TIMER1_OVF_vect)
 {
-  //********* GSCLK DISABLE*********//
-  PORTD &= (0 << 3); //SET GSCLK PIN LOW
-  TCCR2A = 0; //DISABLE TIMER2
-  TCCR2B = 0; //DISABLE TIMER2
-  //********* GSCLK DISABLE*********//
+  //*************GSCLK DISABLE*************//
+  PORTD &= (0 << 3); // SET GSCLK PIN LOW  //
+  TCCR2A = 0;        // DISABLE TIMER2     //
+  TCCR2B = 0;        // DISABLE TIMER2     //
+  //*************GSCLK DISABLE*************//
 
-  //********* BLANK PULSE*********//
-  PORTB |= (1 << 2);//BLANK HIGH
-
-  if (needXlat_pulse == 1) { //if need xlat pulse
+  //********* BLANK PULSE**********//
+  PORTB |= (1 << 2);// BLANK HIGH  //
+  //**********BLANK PULSE**********//
+  
+  //**********XLAT PULSE**********//
+  if (needXlat_pulse == 1) { //if the chips need a xlat pulse
     //********* LATCH PULSE*********//
     PORTB |= (1 << 1); //XLAT HIGH
     PORTB &= (0 << 1); //XLAT LOW
     //********* LATCH PULSE*********//
     needXlat_pulse = 0; //no need to xlat pulse
   }
+  //**********XLAT PULSE**********//
 
   layerChange(); //layerChange
   needGSdata_update = 1;
-
-  PORTB &= (0 << 2); //BLANK LOW
-  //********* BLANK PULSE*********//
+  
+  //**********BLANK PULSE**********//
+  PORTB &= (0 << 2); //BLANK LOW   //
+  //**********BLANK PULSE**********//
 
   PORTB |= (1 << 5); //SPI CLOCK pin to give extra count (193th pulse)
   PORTB &= (0 << 5); //SPI PULSE
 
-  //********* GSCLK ENABLE*********//
-  TCCR2A = (1 << WGM21) | (0 << WGM20);
-  TCCR2B = (0 << WGM22 ); //CTC
-  TCCR2A |= (0 << COM2B1) | (1 << COM2B0); //toggle on compare match OC2B pin
-  TCCR2B |= (0 << CS22) | (0 << CS21) | (1 << CS20); //No prescaler
-  //********* GSCLK ENABLE*********//
+  //***************************GSCLK ENABLE**************************//
+  TCCR2A = (1 << WGM21) | (0 << WGM20);                              //
+  TCCR2B = (0 << WGM22 );                            // CTC          //
+  TCCR2A |= (0 << COM2B1) | (1 << COM2B0);           // toggle OC2B  //
+  TCCR2B |= (0 << CS22) | (0 << CS21) | (1 << CS20); // No prescaler //
+  //***************************GSCLK ENABLE**************************//
 
-  TCNT1 = 0; //RESTART TIMER COUNTER1
+  TCNT1 = 0; // RESTART TIMER COUNTER1
 }
 
 ISR (USART_RX_vect) {
@@ -189,11 +195,11 @@ ISR (USART_RX_vect) {
 
 void loop() {
 
-  if (needGSdata_update == 1) //if layer is changed
+  if (needGSdata_update == 1)     // If the active layer is changed
   {
-    shift_out_data(currentLayer);
-    needGSdata_update = 0; //the layer needs to be changed
-    needXlat_pulse = 1; //need Xlat pulse
+    shift_out_data(currentLayer); // Translate 8bit data from UART buffer to 12bit
+    needGSdata_update = 0;        // The layer needs to be changed
+    needXlat_pulse = 1;           // It needs Xlat pulse
   }
 }
 
@@ -300,7 +306,7 @@ void layerChange() {
 
   PORTC = (( PORTC & 0xF0 ) | ( 0x0F & ( currentLayer))) & 0xEF; //current layer ON,port HIGH
 
-  currentLayer++; //prepare next layer
+  currentLayer++; // Prepare next layer
 
   if (currentLayer == NUM_LAYER) {
     currentLayer = 0;
