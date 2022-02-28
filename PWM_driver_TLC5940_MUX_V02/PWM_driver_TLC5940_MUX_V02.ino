@@ -130,6 +130,7 @@ void setup() {
   //*********************Enable global interrupt*********************//
 }
 
+//TIMER INTERRUPT
 ISR (TIMER1_OVF_vect)
 {
   //*************GSCLK DISABLE*************//
@@ -172,6 +173,7 @@ ISR (TIMER1_OVF_vect)
   TCNT1 = 0; // RESTART TIMER COUNTER1
 }
 
+//UART RECEIVE INTERRUPT
 ISR (USART_RX_vect) {
   val = UDR0;
 
